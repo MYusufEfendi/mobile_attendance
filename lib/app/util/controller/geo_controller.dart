@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:location/location.dart' as loc;
-import 'package:permission_handler/permission_handler.dart';
 
 import '../util.dart';
 
@@ -122,7 +121,6 @@ class GeoController extends GetxController with WidgetsBindingObserver {
   Future<dynamic> getLastKnowPosition() async {
     final hasPermission = await handleLocationPermission();
     if (!hasPermission) return {"hasPermission": false};
-    Position? position;
     double latitude = 0.0;
     double longitude = 0.0;
     position = await Geolocator.getCurrentPosition(

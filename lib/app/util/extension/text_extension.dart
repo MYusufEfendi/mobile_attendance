@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../util.dart';
 
 extension TextExtension on String? {
   Widget text(TextStyle textStyle,
