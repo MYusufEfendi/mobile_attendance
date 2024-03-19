@@ -123,14 +123,13 @@ class GeoController extends GetxController with WidgetsBindingObserver {
     if (!hasPermission) return {"hasPermission": false};
     double latitude = 0.0;
     double longitude = 0.0;
-    position = await Geolocator.getCurrentPosition(
+    await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best, timeLimit: 5.seconds)
         .then((value) {
       latitude = value.latitude;
       longitude = value.longitude;
     }).onError((error, stackTrace) async {
-      position = await Geolocator.getLastKnownPosition(
-              forceAndroidLocationManager: true)
+      await Geolocator.getLastKnownPosition(forceAndroidLocationManager: true)
           .then((value) {
         latitude = value?.latitude ?? 0.0;
         longitude = value?.longitude ?? 0.0;
