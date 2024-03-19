@@ -41,18 +41,18 @@ class MapController extends GetxController {
     debugPrint("$desLatitude $desLongitude");
     directinosService.route(request, (p0, p1) {
       try {
-        if (jarak.value != (p0.routes![0].legs![0].distance!.value! / 1000)) {
-          jarak.value = (p0.routes![0].legs![0].distance!.value! / 1000);
+        if (jarak.value != (p0.routes![0].legs![0].distance!.value! / 1)) {
+          jarak.value = (p0.routes![0].legs![0].distance!.value! / 1);
         } else {
-          jarak.value = (p0.routes![0].legs![0].distance!.value! / 1000);
+          jarak.value = (p0.routes![0].legs![0].distance!.value! / 1);
         }
       } catch (e) {}
     });
-    debugPrint("Jarak End $jarak");
   }
 
   attendance() {
-    if (jarak.value <= 50) {
+    debugPrint("Jarak End ${jarak.value}");
+    if (jarak.value > 50) {
       if (Get.isSnackbarOpen == false) {
         Get.showSnackbar(
           const GetSnackBar(
@@ -103,6 +103,7 @@ class MapController extends GetxController {
     isLoading.value = true;
     GeoController().getLastKnowPosition().then((value) async {
       isInitial = false;
+      markers.clear();
       markers.add(
         Marker(
           markerId: MarkerId(
@@ -111,11 +112,11 @@ class MapController extends GetxController {
         ),
       );
       CameraPosition newPosition = CameraPosition(
-          target: LatLng(value['latitude'], value['longitude']), zoom: 13.0);
+          target: LatLng(value['latitude'], value['longitude']), zoom: 18.0);
       final GoogleMapController controller = await mapC.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
       isLoading.value = false;
-
+      addMarkerMain();
       countDirection(value['latitude'], value['longitude']);
     });
   }
