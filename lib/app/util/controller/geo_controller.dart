@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:location/location.dart' as loc;
+import 'package:mobile_attendance/app/modules/map/controllers/map_controller.dart';
 
 import '../util.dart';
 
@@ -26,16 +27,8 @@ class GeoController extends GetxController with WidgetsBindingObserver {
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-    // var box = SavedBox();
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
     permission = await Geolocator.checkPermission();
-
-    // if (box.role.toString() == "" || box.role.toString() == "null") {
-    //   return false;
-    // }
-
     if (!serviceEnabled) {
       if (Get.isBottomSheetOpen == false) {
         BottomSheetGlobal(
@@ -73,20 +66,6 @@ class GeoController extends GetxController with WidgetsBindingObserver {
           });
       return false;
     }
-    // else if (permission != LocationPermission.always && box.isWork) {
-    //   if (Get.isBottomSheetOpen == false) {
-    //     BottomSheetGlobal(
-    //         type: BottomSheetGlobalType.locationAlways,
-    //         ontap: () async {
-    //           if (GetPlatform.isAndroid == true) {
-    //             await Permission.locationAlways.request();
-    //           } else {
-    //             await Geolocator.openLocationSettings();
-    //           }
-    //         });
-    //   }
-    //   return false;
-    // }
     return true;
   }
 
@@ -94,8 +73,10 @@ class GeoController extends GetxController with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       final hasPermission = await handleLocationPermission();
-      if (hasPermission && Get.isBottomSheetOpen == true) {
-        Get.back();
+      if (hasPermission) {
+        if (Get.isBottomSheetOpen == true) Get.back();
+        var mapC = Get.find<MapController>();
+        mapC.currentLocation();
       }
     }
   }
@@ -107,7 +88,6 @@ class GeoController extends GetxController with WidgetsBindingObserver {
         desiredAccuracy: LocationAccuracy.best);
     if (position.latitude.toString() == "null" ||
         position.latitude.toString() == "") {
-      // BottomSheetGlobal(type: BottomSheetGlobalType.locationUnknow);
       return {"hasPermission": false};
     } else {
       return {
@@ -136,7 +116,6 @@ class GeoController extends GetxController with WidgetsBindingObserver {
       });
     });
     if (latitude == "null" || longitude == "") {
-      // BottomSheetGlobal(type: BottomSheetGlobalType.locationUnknow);
       return {"hasPermission": false};
     } else {
       return {

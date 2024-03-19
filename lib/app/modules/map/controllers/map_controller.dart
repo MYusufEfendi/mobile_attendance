@@ -103,6 +103,8 @@ class MapController extends GetxController {
   currentLocation() {
     isLoading.value = true;
     GeoController().getLastKnowPosition().then((value) async {
+      if (value['hasPermission'] == false) isLoading.value = false;
+
       isInitial = false;
       markers.clear();
       markers.add(
